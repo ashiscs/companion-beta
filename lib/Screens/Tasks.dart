@@ -48,7 +48,8 @@ class TasksState extends State<Tasks>{
   }
 
   bool isDepressed(DocumentSnapshot document){
-    
+    // I have chosen the value of question1 as indicator for a person being depressed
+    // This is a completely random assumption
     document.data.putIfAbsent("q1",document["defNumber"]);
     if(document["q1"]<3)
     return true;
@@ -70,20 +71,13 @@ class TasksState extends State<Tasks>{
       "hour":now.hour
     });
     assert(now.hour!=null);
-    if( document["hour"] <24){
-      setState(() {
-        timeUp=true;
-      });
-      await  document.reference.updateData({
-         "hour":document["hour"]+24
-      });
-    }
+    // TODO  implement 24 hr gap using timeUp variable as flag 
         
   }
   
   void addData() async{
     ansRef.get().then((DocumentSnapshot ds){
-     ds.data.addAll(identifiers);
+     if (ds.data.isEmpty) ds.data.addAll(identifiers);
      updateTime(ds);
      isDepressed(ds);
     });
